@@ -29,10 +29,18 @@ class Planetterp(commands.Cog):
 
         #create dictionary for grades and counts
         grades = {
+            "A+": 0,
             "A": 0,
+            "A-": 0,
+            "B+": 0,
             "B": 0,
+            "B-": 0,
+            "C+": 0,
             "C": 0,
+            "C-": 0,
+            "D+": 0,
             "D": 0,
+            "D-": 0,
             "F": 0,
             "W": 0,
             "Other": 0
@@ -42,26 +50,38 @@ class Planetterp(commands.Cog):
         for item in gradesresponse:
             #go through each grade and add it to the dictionary
             for grade in grades:
-                #if the grade contains a + or -, remove the + or -
-                if grade in item:
-                    if '+' in grade:
-                        grade = grade.replace('+', '')
-                    elif '-' in grade:
-                        grade = grade.replace('-', '')
-                    #add the count to the dictionary
-                    grades[grade] += item[grade]
+                grades[grade] += item[grade]
+
+        #combine all - and + grades
+        grades['A'] += grades['A+'] + grades['A-']
+        grades['B'] += grades['B+'] + grades['B-']
+        grades['C'] += grades['C+'] + grades['C-']
+        grades['D'] += grades['D+'] + grades['D-']
+
+        #remove + and - grades
+        del grades['A+']
+        del grades['A-']
+        del grades['B+']
+        del grades['B-']
+        del grades['C+']
+        del grades['C-']
+        del grades['D+']
+        del grades['D-']
 
         gradesum = sum(grades.values())
+
+        #convert dictionary to percentages
+        for grade in grades:
+            grades[grade] = grades[grade] / gradesum * 100
+
         #convert dictionary to percentages
         # for grade in grades:
         #     grades[grade] = grades[grade] / gradesum * 100
 
 
 
-        print("Grades: " + str(grades))
 
         df = pd.DataFrame.from_dict(grades, orient='index', columns=['Percentage of students'])
-        print(df)
         fig = px.bar(df, x=df.index, y="Percentage of students", title=f'Grades for {coursename}')
         fig.write_image("grades.png")
         
