@@ -72,13 +72,17 @@ class Planetterp(commands.Cog):
             courseresponse['description'] = courseresponse['description'][:332] + "..."
         
         file = discord.File("grades.png", filename="grades.png")
-        embed=discord.Embed(title=courseresponse['name'] + " - " + courseresponse['title'], url="https://planetterp.com/course/" + courseresponse['name'], description=courseresponse['description'])
+        embed=discord.Embed(title=courseresponse['name'] + " - " + courseresponse['title'], url="https://planetterp.com/course/" + courseresponse['name'])
+        if courseresponse['description']:
+            embed.description = courseresponse['description']
         embed.set_thumbnail(url="https://planetterp.com/static/images/logo.png")
-        embed.add_field(name="Average GPA", value="2.215", inline=True)
-        embed.add_field(name="Credits", value="4", inline=True)
+        if courseresponse['average_gpa']:
+            embed.add_field(name="Average GPA", value=round(courseresponse['average_gpa'], 2), inline=True)
+        if courseresponse['credits']:
+            embed.add_field(name="Credits", value=courseresponse["credits"], inline=True)
         #embed add grades.png local file
         embed.set_image(url="attachment://grades.png")
-        msg = await ctx.send(file=file, embed=embed)
+        await ctx.send(file=file, embed=embed)
         
 
 def setup(bot):
