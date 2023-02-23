@@ -53,8 +53,8 @@ class Planetterp(commands.Cog):
 
         gradesum = sum(grades.values())
         #convert dictionary to percentages
-        for grade in grades:
-            grades[grade] = grades[grade] / gradesum * 100
+        # for grade in grades:
+        #     grades[grade] = grades[grade] / gradesum * 100
 
 
 
